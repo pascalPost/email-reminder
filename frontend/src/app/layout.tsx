@@ -14,13 +14,14 @@ import {
 import Link from "next/link";
 import {ModeToggle} from "@/app/mode-toggle";
 import {cn} from "@/lib/utils";
+import React from "react";
 
 const fontSans = FontSans({
     subsets: ["latin"],
     variable: "--font-sans",
 });
 
-export default function RootLayout({children}) {
+export default function RootLayout({children}: {children : React.ReactNode}) {
     const pathname = usePathname();
 
     return (
