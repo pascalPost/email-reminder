@@ -1,7 +1,6 @@
 'use client';
 
 import "@/app/globals.css";
-import {Inter as FontSans} from "next/font/google";
 import {NavigationMenu} from "@radix-ui/react-navigation-menu";
 import {ThemeProvider} from "next-themes";
 import {usePathname} from "next/navigation";
@@ -13,15 +12,15 @@ import {
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import {ModeToggle} from "@/app/mode-toggle";
-import {cn} from "@/lib/utils";
 import React from "react";
 import {QueryClient} from "@tanstack/query-core";
+import {Space_Grotesk} from 'next/font/google'
 import {QueryClientProvider} from "@tanstack/react-query";
 
-const fontSans = FontSans({
-    subsets: ["latin"],
-    variable: "--font-sans",
-});
+const spaceGrotesk = Space_Grotesk({
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600', '700']
+})
 
 export default function RootLayout({children}: { children: React.ReactNode }) {
     const queryClient = new QueryClient()
@@ -29,10 +28,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
 
     return (
         <html lang="en" suppressHydrationWarning={true}>
-        <body className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-        )}>
+        <body className={`${spaceGrotesk.className} min-h-screen bg-background antialiased`}>
         <QueryClientProvider client={queryClient}>
             <ThemeProvider
                 attribute="class"
@@ -40,7 +36,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
                 enableSystem
                 disableTransitionOnChange
             >
-                <NavigationMenu orientation="horizontal" className="flex justify-center mt-2 mb-4 gap-2">
+                <NavigationMenu orientation="horizontal" className="flex justify-center pt-2 mb-4 gap-2">
                     <NavigationMenuList>
                         <NavigationMenuItem>
                             <Link href="/clients" legacyBehavior passHref>

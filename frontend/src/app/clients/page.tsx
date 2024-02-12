@@ -1,9 +1,9 @@
 "use client";
 
 import ClientForm from "@/app/clients/form";
-import {DataTable} from "@/app/clients/data-table";
 import {Client, columns} from "@/app/clients/columns";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {DataTable} from "@/app/clients/data-table";
 
 async function getData(): Promise<Client[]> {
     // Fetch data from your API here.
