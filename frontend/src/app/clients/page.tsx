@@ -2,7 +2,8 @@
 
 import ClientForm from "@/app/clients/form";
 import {DataTable} from "@/app/clients/data-table";
-import {columns, Client} from "@/app/clients/columns";
+import {Client, columns} from "@/app/clients/columns";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 
 async function getData(): Promise<Client[]> {
     // Fetch data from your API here.
@@ -37,8 +38,11 @@ async function getData(): Promise<Client[]> {
     ];
 }
 
-export default async function ClientsPage() {
-    const data = await getData()
+export default function ClientsPage() {
+    const queryClient = useQueryClient();
+    const query = useQuery({queryKey: ['data'], queryFn: getData})
+
+    const data = query.data ?? [];
 
     return (
         <>
