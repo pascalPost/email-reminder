@@ -13,13 +13,13 @@ import MonthPicker from "@/components/month-picker";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Calendar} from "lucide-react";
 
-const GenericStringConstraint = z.string().min(1, {
+export const GenericStringConstraint = z.string().min(1, {
     message: "Min. 1 Buchstabe.",
 }).max(20, {
     message: "Max. 20 Buchstaben.",
 });
 
-const formSchema = z.object({
+export const clientFormSchema = z.object({
     firstName: GenericStringConstraint,
     lastName: GenericStringConstraint,
     email: z.string().email({
@@ -31,8 +31,14 @@ const formSchema = z.object({
     frequency: z.enum(["halfyear", "year"]),
 });
 
+export function yearMonthString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
+    return `${year}-${month}`;
+}
+
 export default function ClientForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<z.infer<typeof clientFormSchema>>({
         defaultValues: {
             firstName: "",
             lastName: "",
@@ -40,7 +46,7 @@ export default function ClientForm() {
             lastReminder: "",
             frequency: "halfyear",
         },
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(clientFormSchema),
     });
 
     const watchLastReminder = form.watch('lastReminder');
@@ -54,22 +60,15 @@ export default function ClientForm() {
         return new Date(year, month - 1);
     }
 
-    function yearMonthString(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
-        return `${year}-${month}`;
-    }
-
     function onMonthChange(date: Date) {
         form.setValue('lastReminder', yearMonthString(date));
     }
 
     function onReset() {
-        console.log("reset");
         form.reset();
     }
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    function onSubmit(values: z.infer<typeof clientFormSchema>) {
         console.log(values);
 
         alert(JSON.stringify(values));
@@ -82,7 +81,6 @@ export default function ClientForm() {
                 <CardContent className="pt-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} onReset={onReset} id="clientForm">
-
                             <div className="grid grid-cols-2 items-center gap-4">
                                 <FormField
                                     control={form.control}

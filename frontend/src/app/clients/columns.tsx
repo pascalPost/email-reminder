@@ -11,6 +11,9 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import MonthPicker from "@/components/month-picker";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {useForm} from "react-hook-form";
+import {clientFormSchema, GenericStringConstraint, yearMonthString} from "@/app/clients/form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -24,19 +27,50 @@ export type Client = {
     registrationDate: string
 };
 
+const clientEditSchema = clientFormSchema.extend({
+    "id": GenericStringConstraint
+});
+
 function ActionsCell({row}: { row: Row<Client> }) {
     const client: Client = row.original;
 
-    const form = useForm({
+    const form = useForm<z.infer<typeof clientEditSchema>>({
         defaultValues: {
             "id": client.id,
             "firstName": client.firstName,
             "lastName": client.lastName,
             "email": client.email,
-            "lastReminder": client.lastReminder,
+            "lastReminder": yearMonthString(new Date(client.lastReminder)),
             "frequency": client.reminderFrequency,
         },
+        resolver: zodResolver(clientEditSchema),
     });
+
+    const watchLastReminder = form.watch('lastReminder');
+
+    function onMonthChange(date: Date) {
+        form.setValue('lastReminder', yearMonthString(date));
+    }
+
+    function onReset() {
+        form.reset();
+    }
+
+    const lastReminderDate = (): Date => {
+        if (!watchLastReminder) {
+            return new Date();
+        }
+
+        const [year, month]: number[] = watchLastReminder.split("-").map(Number);
+        return new Date(year, month - 1);
+    }
+
+    function onSubmit(values: z.infer<typeof clientEditSchema>) {
+        console.log(values);
+
+        alert(JSON.stringify(values));
+        // form.reset();
+    }
 
     return (
         <>
@@ -46,13 +80,12 @@ function ActionsCell({row}: { row: Row<Client> }) {
                         <Pencil className="h-4 w-4"/>
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="sm:max-w-3xl">
                     <DialogHeader>
                         <DialogTitle>Bearbeiten</DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form id="clientForm">
-
+                        <form onSubmit={form.handleSubmit(onSubmit)} onReset={onReset} id="clientEditForm">
                             <div className="grid grid-cols-2 items-center gap-4">
                                 <FormField
                                     control={form.control}
@@ -95,7 +128,7 @@ function ActionsCell({row}: { row: Row<Client> }) {
                                         )}
                                     />
                                 </div>
-                                <div className="flex flex-col">
+                                <div className="flex flex-col space-y-1.5 mt-4">
                                     <FormField
                                         control={form.control}
                                         name="lastReminder"
@@ -103,17 +136,16 @@ function ActionsCell({row}: { row: Row<Client> }) {
                                             <FormItem>
                                                 <FormLabel>Letzte Erinnerung</FormLabel>
                                                 <FormControl>
-                                                    <div className="relative flex items-center max-w-2xl ">
-                                                        <Input placeholder="2024-3" {...field} />
+                                                    <div className="relative flex items-center max-w-2xl">
+                                                        <Input placeholder={yearMonthString(new Date())} {...field} />
                                                         <div className="absolute right-2 top-1.5">
                                                             <Popover>
                                                                 <PopoverTrigger>
                                                                     <Calendar/>
                                                                 </PopoverTrigger>
                                                                 <PopoverContent>
-                                                                    <MonthPicker currentMonth={new Date()}
-                                                                                 onMonthChange={() => {
-                                                                                 }}/>
+                                                                    <MonthPicker currentMonth={lastReminderDate()}
+                                                                                 onMonthChange={onMonthChange}/>
                                                                 </PopoverContent>
                                                             </Popover>
                                                         </div>
@@ -140,7 +172,8 @@ function ActionsCell({row}: { row: Row<Client> }) {
                         </form>
                     </Form>
                     <DialogFooter>
-                        <Button type="submit">Speichern</Button>
+                        <Button type="reset" form="clientEditForm" variant="outline">Reset</Button>
+                        <Button type="submit" form="clientEditForm">Speichern</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
