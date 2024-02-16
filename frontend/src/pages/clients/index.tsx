@@ -1,10 +1,9 @@
-"use client";
+import ClientForm from "./_form";
+import {Client, columns} from "./_columns.tsx";
+import {useQuery} from "@tanstack/react-query";
+import {DataTable} from "./_data-table";
 
-import ClientForm from "@/app/clients/form";
-import {Client, columns} from "@/app/clients/columns";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {DataTable} from "@/app/clients/data-table";
-
+// eslint-disable-next-line @typescript-eslint/require-await
 async function getData(): Promise<Client[]> {
     // Fetch data from your API here.
     return [
@@ -39,7 +38,7 @@ async function getData(): Promise<Client[]> {
 }
 
 export default function ClientsPage() {
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     const query = useQuery({queryKey: ['data'], queryFn: getData})
 
     const data = query.data ?? [];
@@ -52,4 +51,4 @@ export default function ClientsPage() {
             </div>
         </>
     );
-};
+}

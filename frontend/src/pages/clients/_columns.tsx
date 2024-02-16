@@ -11,7 +11,7 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import MonthPicker from "@/components/month-picker";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {useForm} from "react-hook-form";
-import {clientFormSchema, GenericStringConstraint, yearMonthString} from "@/app/clients/form";
+import {clientFormSchema, GenericStringConstraint, yearMonthString} from "./_form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 
