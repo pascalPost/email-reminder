@@ -6,8 +6,8 @@ Wails is used to bundle it as a desktop application.
 ## Pre-requisites
 
 - Go 1.17+
-- Node.js
-- NPM
+- vite
+- PNPM
 - [Wails](https://wails.io/docs/gettingstarted/installation)
 
 ## Wails

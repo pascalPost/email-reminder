@@ -4,7 +4,6 @@ import {ColumnDef, Row} from "@tanstack/react-table";
 import {Calendar, Pencil, Trash} from "lucide-react";
 import {Button} from "@/components/ui/button"
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,} from "@/components/ui/dialog";
-import {Label} from "@radix-ui/react-menu";
 import {Input} from "@/components/ui/input";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
@@ -157,7 +156,7 @@ function ActionsCell({row}: { row: Row<Client> }) {
                                     />
                                 </div>
                                 <div className="flex flex-col space-y-1.5 mt-4">
-                                    <Label>Frequenz</Label>
+                                    <FormLabel>Frequenz</FormLabel>
                                     <Select defaultValue="halfyear">
                                         <SelectTrigger id="frequency" {...form.register("frequency")}>
                                             <SelectValue/>

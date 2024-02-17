@@ -1,6 +1,5 @@
 import {NavigationMenu} from "@radix-ui/react-navigation-menu";
-import {ThemeProvider} from "next-themes";
-import {usePathname} from "next/navigation";
+import {ThemeProvider} from "@/components/theme-provider";
 import {
     NavigationMenuItem,
     NavigationMenuLink,
@@ -8,54 +7,49 @@ import {
     navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import {ModeToggle} from "./_mode-toggle";
-import {QueryClient} from "@tanstack/query-core";
-import {QueryClientProvider} from "@tanstack/react-query";
-import {NavLink, Outlet} from 'react-router-dom'
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {NavLink, Outlet, useLocation} from 'react-router-dom'
+import React from "react";
+
+function MenuLink({url, children}: { url: string, children: React.ReactNode; }) {
+    const location = useLocation().pathname;
+    return (
+        <NavigationMenuLink asChild active={location === url}
+                            className={navigationMenuTriggerStyle()}>
+            <NavLink to={url}>
+                {children}
+            </NavLink>
+        </NavigationMenuLink>
+    )
+}
 
 export default function App() {
     const queryClient = new QueryClient()
-    const pathname = usePathname();
 
     return (
         <div>
-            {/*// <html lang="en" suppressHydrationWarning={true}>*/}
-            {/*// <body className={`min-h-screen bg-background antialiased`}>*/}
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
+                <ThemeProvider>
                     <NavigationMenu orientation="horizontal" className="mb-4 flex justify-center gap-2 pt-2">
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}
-                                                    active={pathname === '/clients'}>
-                                    <NavLink to="/clients">
-                                        Clients
-                                    </NavLink>
-                                </NavigationMenuLink>
+                                <MenuLink url='/clients'>
+                                    Client
+                                </MenuLink>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}
-                                                    active={pathname === '/emails'}>
-                                    <NavLink to="/emails">
-                                        Emails
-                                    </NavLink>
-                                </NavigationMenuLink>
+                                <MenuLink url='/emails'>
+                                    Email
+                                </MenuLink>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}
-                                                    active={pathname === '/settings'}>
-                                    <NavLink to='/settings'>
-                                        Settings
-                                    </NavLink>
-                                </NavigationMenuLink>
+                                <MenuLink url='/settings'>
+                                    Settings
+                                </MenuLink>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                         <ModeToggle/>
@@ -63,8 +57,6 @@ export default function App() {
                     <Outlet/>
                 </ThemeProvider>
             </QueryClientProvider>
-            {/*</body>*/}
-            {/*</html>*/}
         </div>
     )
 }
