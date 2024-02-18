@@ -1,0 +1,15 @@
+{
+  "FirstName": "First Name",
+  "PlaceholderFirstName": "John",
+  "LastName": "Last Name",
+  "PlaceholderLastName": "Doe",
+  "Email": "Email",
+  "PlaceholderEmail": "john@doe.com",
+  "LastReminder": "Last Reminder",
+  "Frequency": "Frequency",
+  "Annual" : "Annual",
+  "Semiannual" : "Semiannual",
+  "Cancel": "Cancel",
+  "Save": "Save",
+  "Registration": "Registration"
+}

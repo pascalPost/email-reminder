@@ -1,36 +1,35 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-// import Backend from 'i18next-locize-backend';
-// import LastUsed from 'locize-lastused';
-// import { locizePlugin, locizeEditorPlugin } from 'locize';
+import HttpApi from 'i18next-http-backend';
+import {makeZodI18nMap} from "zod-i18n-map";
+import {z} from "zod";
+import zod_en from "zod-i18n-map/locales/en/zod.json";
+import zod_de from "zod-i18n-map/locales/de/zod.json";
 
-
-
-i18n.use(LanguageDetector).use(initReactI18next).init({
+i18n.use(HttpApi).use(LanguageDetector).use(initReactI18next).init({
+    partialBundledLanguages: true,
     fallbackLng: 'en',
     debug: true,
-    supportedLngs : ['en', 'de'],
+    supportedLngs: ['en', 'de'],
+    load: 'languageOnly',
     resources: {
         en: {
-            navigation: {
-                Clients: "Clients",
-                Emails: "Emails",
-                Settings: "Settings",
-            },
-            translation: {
-
+            zod: zod_en,
+            zod_custom: {
+                InvalidDate: "Invalid Date. Must be YYYY-MM."
             }
         },
         de: {
-            navigation:{
-                Clients: "Kunden",
-                Emails: "E-Mails",
-                Settings: "Einstellungen",
-            },
-            translation: {
-
+            zod: zod_de,
+            zod_custom: {
+                InvalidDate: "Ungültiges Datum. Muss YYYY-MM sein."
             }
-        }
-    }
-}).catch((error) => {console.error(error)});
+        },
+    },
+}).catch((error) => {
+    console.error(error)
+});
+
+z.setErrorMap(makeZodI18nMap({ns: ["zod", "zod_custom"]}));
+export {z};

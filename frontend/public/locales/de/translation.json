@@ -1,0 +1,16 @@
+{
+  "FirstName": "Vorname",
+  "PlaceholderFirstName": "Max",
+  "LastName": "Nachname",
+  "PlaceholderLastName": "Mustermann",
+  "Email": "E-Mail",
+  "PlaceholderEmail": "max@mustermann.de",
+  "LastReminder": "Letzte Erinnerung",
+  "Frequency": "Frequenz",
+  "Annual" : "Jährlich",
+  "Semiannual" : "Halbjährlich",
+  "Year" : "Jährlich",
+  "Cancel": "Abbrechen",
+  "Save": "Speichern",
+  "Registration": "Registrierung"
+}

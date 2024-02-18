@@ -13,6 +13,7 @@ import {useForm} from "react-hook-form";
 import {clientFormSchema, GenericStringConstraint, yearMonthString} from "./_form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {useTranslation} from "react-i18next";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -186,11 +187,11 @@ function ActionsCell({row}: { row: Row<Client> }) {
 export const columns: ColumnDef<Client>[] = [
     {
         accessorKey: "firstName",
-        header: "Vorname",
+        header: "FirstName"
     },
     {
         accessorKey: "lastName",
-        header: "Nachname",
+        header: "LastName",
     },
     {
         accessorKey: "email",
@@ -198,23 +199,27 @@ export const columns: ColumnDef<Client>[] = [
     },
     {
         accessorKey: "reminderFrequency",
-        header: "Frequenz",
+        header: "Frequency",
         cell: ({row}) => {
+            const {t} = useTranslation();
+
             const freq = row.getValue("reminderFrequency");
 
             return (
                 <div>
-                    {freq === "halfyear" ? "halbjährlich" : "jährlich"}
+                    {freq === "semiannual" ? t("Semiannual") : t("Annual")}
                 </div>
             )
         }
     },
     {
         accessorKey: "lastReminder",
-        header: "Letzte Erinnerung",
+        header: "LastReminder",
         cell: ({row}) => {
+            const {i18n} = useTranslation();
+
             const date = new Date(row.getValue("lastReminder"));
-            const formatted = new Intl.DateTimeFormat("de-DE", {
+            const formatted = new Intl.DateTimeFormat(i18n.resolvedLanguage === "de" ? "de-DE" : undefined, {
                 month: "2-digit",
                 day: "2-digit",
                 year: "numeric",
@@ -225,10 +230,11 @@ export const columns: ColumnDef<Client>[] = [
     },
     {
         accessorKey: "registrationDate",
-        header: "Registrierung",
+        header: "Registration",
         cell: ({row}) => {
-            const date = new Date(row.getValue("lastReminder"));
-            const formatted = new Intl.DateTimeFormat("de-DE", {
+            const {i18n} = useTranslation();
+            const date = new Date(row.getValue("registrationDate"));
+            const formatted = new Intl.DateTimeFormat(i18n.resolvedLanguage === "de" ? "de-DE" : undefined, {
                 month: "2-digit",
                 day: "2-digit",
                 year: "numeric",
