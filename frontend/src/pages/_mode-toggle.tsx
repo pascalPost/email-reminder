@@ -1,12 +1,19 @@
 import {Moon, Sun} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItemRight,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {useTheme} from "@/lib/utils.ts";
+import {Theme} from "@/components/theme-provider";
 
 
 export default function ModeToggle() {
-    const {setTheme} = useTheme()
+    const {theme, setTheme} = useTheme()
 
     return (
         <DropdownMenu>
@@ -19,22 +26,14 @@ export default function ModeToggle() {
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => {
-                    setTheme("light")
+            <DropdownMenuContent>
+                <DropdownMenuRadioGroup value={theme} onValueChange={(v) => {
+                    setTheme(v as Theme)
                 }}>
-                    Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {
-                    setTheme("dark")
-                }}>
-                    Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {
-                    setTheme("system")
-                }}>
-                    System
-                </DropdownMenuItem>
+                    <DropdownMenuRadioItemRight value="light">Light</DropdownMenuRadioItemRight>
+                    <DropdownMenuRadioItemRight value="dark">Dark</DropdownMenuRadioItemRight>
+                    <DropdownMenuRadioItemRight value="system">System</DropdownMenuRadioItemRight>
+                </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     )
