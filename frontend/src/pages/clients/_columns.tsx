@@ -23,7 +23,7 @@ export type Client = {
     firstName: string
     lastName: string
     email: string
-    reminderFrequency: "halfyear" | "year"
+    reminderFrequency: "semiannual" | "annual"
     lastReminder: string
     registrationDate: string
 };

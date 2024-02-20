@@ -11,7 +11,7 @@ async function getData(): Promise<Client[]> {
             "firstName": "Max",
             "lastName": "Mustermann",
             "email": "Max@mustermann.de",
-            "reminderFrequency": "halfyear",
+            "reminderFrequency": "semiannual",
             "registrationDate": "2023-12-17T22:33:05Z",
             "lastReminder": "2023-12-01T00:00:00Z"
         },
@@ -20,7 +20,7 @@ async function getData(): Promise<Client[]> {
             "firstName": "Bitte",
             "lastName": "Mal-Was",
             "email": "bitte@verschicken.now",
-            "reminderFrequency": "halfyear",
+            "reminderFrequency": "semiannual",
             "registrationDate": "2023-12-18T22:40:19Z",
             "lastReminder": "2023-01-01T00:00:00Z"
         },
@@ -29,7 +29,7 @@ async function getData(): Promise<Client[]> {
             "firstName": "Max",
             "lastName": "Mustermann",
             "email": "Max@mustermann.de",
-            "reminderFrequency": "year",
+            "reminderFrequency": "annual",
             "registrationDate": "2023-12-21T23:03:34Z",
             "lastReminder": "2023-12-01T00:00:00Z"
         }
