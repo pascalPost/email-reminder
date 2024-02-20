@@ -3,3 +3,9 @@ node_modules
 frontend/dist
 frontend/package.json.md5
 frontend/wailsjs
+
+# db
+db.sqlite
+
+# air
+tmp
