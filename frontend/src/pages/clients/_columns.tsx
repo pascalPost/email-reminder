@@ -10,10 +10,11 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import MonthPicker from "@/components/month-picker";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {useForm} from "react-hook-form";
-import {clientFormSchema, GenericStringConstraint, yearMonthString} from "./_form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useTranslation} from "react-i18next";
+import {clientFormSchema, GenericStringConstraint} from "@/pages/clients/_schema.ts";
+import {yearMonthString} from "@/lib/utils.ts";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.

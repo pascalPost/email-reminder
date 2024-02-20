@@ -11,22 +11,8 @@ import MonthPicker from "@/components/month-picker";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Calendar} from "lucide-react";
 import {useTranslation} from 'react-i18next';
-
-export const GenericStringConstraint = z.string().min(1).max(20);
-
-export const clientFormSchema = z.object({
-    firstName: GenericStringConstraint,
-    lastName: GenericStringConstraint,
-    email: z.string().email(),
-    lastReminder: z.string().refine(value => /^\d{4}-\d{2}$/.test(value), {params: {i18n: "InvalidDate"}}),
-    frequency: z.enum(["halfyear", "year"]),
-});
-
-export function yearMonthString(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
-    return `${year}-${month}`;
-}
+import {yearMonthString} from "@/lib/utils.ts";
+import {clientFormSchema} from "@/pages/clients/_schema.ts";
 
 export default function ClientForm() {
     const {t} = useTranslation();
@@ -37,7 +23,7 @@ export default function ClientForm() {
             lastName: "",
             email: "",
             lastReminder: "",
-            frequency: "halfyear",
+            frequency: "semiannual",
         },
         resolver: zodResolver(clientFormSchema),
     });
@@ -69,7 +55,7 @@ export default function ClientForm() {
     }
 
     return (
-        <div className="md:container md:max-w-3xl md:mx-auto ml-2 mr-2">
+        <div className="mx-2 md:container md:mx-auto md:max-w-3xl">
             <Card>
                 <CardContent className="pt-4">
                     <Form {...form}>
@@ -101,7 +87,7 @@ export default function ClientForm() {
                                         </FormItem>
                                     )}
                                 />
-                                <div className="flex flex-col space-y-1.5 col-span-2">
+                                <div className="col-span-2 flex flex-col space-y-1.5">
                                     <FormField
                                         control={form.control}
                                         name="email"
@@ -124,7 +110,7 @@ export default function ClientForm() {
                                             <FormItem>
                                                 <FormLabel>{t('LastReminder')}</FormLabel>
                                                 <FormControl>
-                                                    <div className="relative flex items-center max-w-2xl ">
+                                                    <div className="relative flex max-w-2xl items-center ">
                                                         <Input placeholder={yearMonthString(new Date())} {...field} />
                                                         <div className="absolute right-2 top-1.5">
                                                             <Popover>
@@ -144,7 +130,7 @@ export default function ClientForm() {
                                         )}
                                     />
                                 </div>
-                                <div className="flex flex-col space-y-1.5 mt-4">
+                                <div className="mt-4 flex flex-col space-y-1.5">
                                     <Label htmlFor="frequency">{t('Frequency')}</Label>
                                     <Select defaultValue="semiannual">
                                         <SelectTrigger id="frequency" {...form.register("frequency")}>
@@ -160,7 +146,7 @@ export default function ClientForm() {
                         </form>
                     </Form>
                 </CardContent>
-                <CardFooter className="grid grid-cols-2 w-full gap-4 mt-2">
+                <CardFooter className="mt-2 grid w-full grid-cols-2 gap-4">
                     <Button type="reset" form="clientForm" variant="outline">{t('Cancel')}</Button>
                     <Button type="submit" form="clientForm">{t('Save')}</Button>
                 </CardFooter>
