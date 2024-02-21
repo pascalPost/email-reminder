@@ -1,11 +1,13 @@
-import ClientForm from "./_form";
-import {Client, columns} from "./_columns.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {DataTable} from "./_data-table";
+import {Client, clientSchema} from "@/pages/clients/_schema.ts";
+import {z} from "zod";
+import ClientForm from "@/pages/clients/_form.tsx";
+import {DataTable} from "@/pages/clients/_data-table.tsx";
+import {columns} from "@/pages/clients/_columns.tsx";
 
 async function getData(): Promise<Client[]> {
     // Fetch data from your API here.
-    return [
+    return z.array(clientSchema).parseAsync([
         {
             "id": "1",
             "firstName": "Max",
@@ -33,20 +35,28 @@ async function getData(): Promise<Client[]> {
             "registrationDate": "2023-12-21T23:03:34Z",
             "lastReminder": "2023-12-01T00:00:00Z"
         }
-    ];
+    ]);
 }
 
 export default function ClientsPage() {
-    const query = useQuery({queryKey: ['data'], queryFn: getData})
+    const {isPending, isSuccess, error, data} = useQuery({
+        queryKey: ['getClients'],
+        queryFn: async () => {
+            return getData();
+        }
+    });
 
-    const data = query.data ?? [];
+    if (isPending) return <div>Fetching posts...</div>;
+    if (error) return <div>An error occurred: {error.message}</div>;
 
-    return (
-        <>
-            <ClientForm/>
-            <div className="container mx-auto py-10">
-                <DataTable columns={columns} data={data}/>
-            </div>
-        </>
-    );
+    if (isSuccess) {
+        return (
+            <>
+                <ClientForm/>
+                <div className="container mx-auto py-10">
+                    <DataTable columns={columns} data={data}/>
+                </div>
+            </>
+        );
+    }
 }

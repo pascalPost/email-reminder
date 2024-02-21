@@ -3,7 +3,6 @@ import {yearMonthStringToDate} from "@/lib/utils.ts";
 
 export const GenericStringConstraint = z.string().min(1).max(30);
 
-
 export const clientFormSchema = z.object({
     firstName: GenericStringConstraint,
     lastName: GenericStringConstraint,
@@ -21,5 +20,14 @@ export const clientFormSchema = z.object({
         return date;
     }),
 
-    frequency: z.enum(["semiannual", "annual"]),
+    reminderFrequency: z.enum(["semiannual", "annual"]),
 });
+
+export const clientSchema = clientFormSchema.extend({
+    id: GenericStringConstraint,
+    registrationDate: z.coerce.date(),
+    lastReminder: z.coerce.date(),
+});
+
+export type ClientForm = z.infer<typeof clientFormSchema>;
+export type Client = z.infer<typeof clientSchema>;

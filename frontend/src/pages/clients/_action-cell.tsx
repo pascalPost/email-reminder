@@ -1,7 +1,4 @@
 import {Row} from "@tanstack/react-table";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
 import {
     Dialog,
     DialogContent,
@@ -18,26 +15,23 @@ import {yearMonthStringFromDate} from "@/lib/utils.ts";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import MonthPicker from "@/components/month-picker.tsx";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
-import {Client} from "@/pages/clients/_columns.tsx";
-import {clientFormSchema, GenericStringConstraint} from "@/pages/clients/_schema.ts";
-
-const clientEditSchema = clientFormSchema.extend({
-    "id": GenericStringConstraint
-});
+import {Client, clientSchema} from "@/pages/clients/_schema.ts";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 
 export function ActionsCell({row}: { row: Row<Client> }) {
-    const client: Client = row.original;
+    const client = row.original;
 
-    const form = useForm<z.infer<typeof clientEditSchema>>({
+    const form = useForm<Client>({
         defaultValues: {
             "id": client.id,
             "firstName": client.firstName,
             "lastName": client.lastName,
             "email": client.email,
-            "lastReminder": new Date(client.lastReminder),
-            "frequency": client.reminderFrequency,
+            "lastReminder": client.lastReminder,
+            "reminderFrequency": client.reminderFrequency,
         },
-        resolver: zodResolver(clientEditSchema),
+        resolver: zodResolver(clientSchema),
     });
 
     const lastReminder = form.watch('lastReminder');
@@ -50,7 +44,7 @@ export function ActionsCell({row}: { row: Row<Client> }) {
         form.reset();
     }
 
-    function onSubmit(values: z.infer<typeof clientEditSchema>) {
+    function onSubmit(values: Client) {
         console.log(values);
 
         alert(JSON.stringify(values));
@@ -148,12 +142,12 @@ export function ActionsCell({row}: { row: Row<Client> }) {
                                 <div className="mt-4 flex flex-col space-y-1.5">
                                     <FormLabel>Frequenz</FormLabel>
                                     <Select defaultValue="halfyear">
-                                        <SelectTrigger id="frequency" {...form.register("frequency")}>
+                                        <SelectTrigger id="frequency" {...form.register("reminderFrequency")}>
                                             <SelectValue/>
                                         </SelectTrigger>
                                         <SelectContent position="popper">
-                                            <SelectItem value="halfyear">Halbjährlich</SelectItem>
-                                            <SelectItem value="year">Jährlich</SelectItem>
+                                            <SelectItem value="semiannual">Halbjährlich</SelectItem>
+                                            <SelectItem value="annual">Jährlich</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

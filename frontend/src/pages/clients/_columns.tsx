@@ -1,16 +1,7 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {useTranslation} from "react-i18next";
 import {ActionsCell} from "./_action-cell";
-
-export type Client = {
-    id: string
-    firstName: string
-    lastName: string
-    email: string
-    reminderFrequency: "semiannual" | "annual"
-    lastReminder: string
-    registrationDate: string
-};
+import {Client} from "@/pages/clients/_schema.ts";
 
 export const columns: ColumnDef<Client>[] = [
     {

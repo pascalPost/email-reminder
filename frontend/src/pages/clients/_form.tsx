@@ -23,21 +23,12 @@ export default function ClientForm() {
             lastName: "",
             email: "",
             lastReminder: new Date(),
-            frequency: "semiannual",
+            reminderFrequency: "semiannual",
         },
         resolver: zodResolver(clientFormSchema),
     });
 
     const lastReminder = form.watch('lastReminder');
-
-    // const lastReminderDate = (): Date => {
-    //     if (!watchLastReminder) {
-    //         return new Date();
-    //     }
-    //
-    //     const [year, month]: number[] = watchLastReminder.split("-").map(Number);
-    //     return new Date(year, month - 1);
-    // }
 
     function onMonthChange(date: Date) {
         form.setValue('lastReminder', date);
@@ -138,7 +129,7 @@ export default function ClientForm() {
                                 <div className="mt-4 flex flex-col space-y-1.5">
                                     <Label htmlFor="frequency">{t('Frequency')}</Label>
                                     <Select defaultValue="semiannual">
-                                        <SelectTrigger id="frequency" {...form.register("frequency")}>
+                                        <SelectTrigger id="frequency" {...form.register("reminderFrequency")}>
                                             <SelectValue/>
                                         </SelectTrigger>
                                         <SelectContent position="popper">
