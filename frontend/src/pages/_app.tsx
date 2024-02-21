@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import ModeToggle from "./_mode-toggle";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {NavLink, Outlet, useLocation} from 'react-router-dom'
+import {NavLink, Outlet, useLocation} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import LanguageSelector from "@/components/lang-select.tsx";
 import ThemeProvider from "@/components/theme-provider.tsx";

@@ -141,7 +141,7 @@ export function ActionsCell({row}: { row: Row<Client> }) {
                                 </div>
                                 <div className="mt-4 flex flex-col space-y-1.5">
                                     <FormLabel>Frequenz</FormLabel>
-                                    <Select defaultValue="halfyear">
+                                    <Select defaultValue={form.watch('reminderFrequency')}>
                                         <SelectTrigger id="frequency" {...form.register("reminderFrequency")}>
                                             <SelectValue/>
                                         </SelectTrigger>
