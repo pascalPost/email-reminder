@@ -20,7 +20,7 @@ function getStartOfCurrentMonth() {
     return startOfMonth(startOfToday());
 }
 
-interface MonthPickerProps {
+type MonthPickerProps = {
     currentMonth: Date;
     onMonthChange: (newMonth: Date) => void;
 }
@@ -40,12 +40,12 @@ export default function MonthPicker({
     });
 
     function previousYear() {
-        let firstDayNextYear = add(firstDayCurrentYear, {years: -1});
+        const firstDayNextYear = add(firstDayCurrentYear, {years: -1});
         setCurrentYear(format(firstDayNextYear, 'yyyy'));
     }
 
     function nextYear() {
-        let firstDayNextYear = add(firstDayCurrentYear, {years: 1});
+        const firstDayNextYear = add(firstDayCurrentYear, {years: 1});
         setCurrentYear(format(firstDayNextYear, 'yyyy'));
     }
 
@@ -74,7 +74,7 @@ export default function MonthPicker({
                                 type="button"
                                 onClick={previousYear}
                             >
-                                <ChevronLeft className="h-4 w-4"/>
+                                <ChevronLeft className="size-4"/>
                             </button>
                             <button
                                 name="next-year"
@@ -88,7 +88,7 @@ export default function MonthPicker({
                                 disabled={isFuture(add(firstDayCurrentYear, {years: 1}))}
                                 onClick={nextYear}
                             >
-                                <ChevronRight className="h-4 w-4"/>
+                                <ChevronRight className="size-4"/>
                             </button>
                         </div>
                     </div>
@@ -117,7 +117,9 @@ export default function MonthPicker({
                                     role="gridcell"
                                     tabIndex={-1}
                                     type="button"
-                                    onClick={() => onMonthChange(month)}
+                                    onClick={() => {
+                                        onMonthChange(month);
+                                    }}
                                 >
                                     <time dateTime={format(month, 'yyyy-MM-dd')}>
                                         {format(month, 'MMM')}

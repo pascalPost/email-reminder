@@ -1,43 +1,46 @@
-import {Button} from "@/components/ui/button"
-import {Card, CardContent, CardFooter} from "@/components/ui/card"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
+import {Row} from "@tanstack/react-table";
 import {useForm} from "react-hook-form";
+import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {z} from "@/i18n.ts";
-import MonthPicker from "@/components/month-picker";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Calendar} from "lucide-react";
-import {useTranslation} from 'react-i18next';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Calendar, Pencil, Trash} from "lucide-react";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form.tsx";
+import {Input} from "@/components/ui/input.tsx";
 import {yearMonthStringFromDate} from "@/lib/utils.ts";
-import {clientFormSchema} from "@/pages/clients/_schema.ts";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import MonthPicker from "@/components/month-picker.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {Client} from "@/pages/clients/_columns.tsx";
+import {clientFormSchema, GenericStringConstraint} from "@/pages/clients/_schema.ts";
 
-export default function ClientForm() {
-    const {t} = useTranslation();
+const clientEditSchema = clientFormSchema.extend({
+    "id": GenericStringConstraint
+});
 
-    const form = useForm<z.infer<typeof clientFormSchema>>({
+export function ActionsCell({row}: { row: Row<Client> }) {
+    const client: Client = row.original;
+
+    const form = useForm<z.infer<typeof clientEditSchema>>({
         defaultValues: {
-            firstName: "",
-            lastName: "",
-            email: "",
-            lastReminder: new Date(),
-            frequency: "semiannual",
+            "id": client.id,
+            "firstName": client.firstName,
+            "lastName": client.lastName,
+            "email": client.email,
+            "lastReminder": new Date(client.lastReminder),
+            "frequency": client.reminderFrequency,
         },
-        resolver: zodResolver(clientFormSchema),
+        resolver: zodResolver(clientEditSchema),
     });
 
     const lastReminder = form.watch('lastReminder');
-
-    // const lastReminderDate = (): Date => {
-    //     if (!watchLastReminder) {
-    //         return new Date();
-    //     }
-    //
-    //     const [year, month]: number[] = watchLastReminder.split("-").map(Number);
-    //     return new Date(year, month - 1);
-    // }
 
     function onMonthChange(date: Date) {
         form.setValue('lastReminder', date);
@@ -47,7 +50,7 @@ export default function ClientForm() {
         form.reset();
     }
 
-    function onSubmit(values: z.infer<typeof clientFormSchema>) {
+    function onSubmit(values: z.infer<typeof clientEditSchema>) {
         console.log(values);
 
         alert(JSON.stringify(values));
@@ -55,22 +58,30 @@ export default function ClientForm() {
     }
 
     return (
-        <div className="mx-2 md:container md:mx-auto md:max-w-3xl">
-            <Card>
-                <CardContent className="pt-4">
+        <>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" className="size-8 p-0">
+                        <Pencil className="size-4"/>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>Bearbeiten</DialogTitle>
+                    </DialogHeader>
                     <Form {...form}>
                         <form onSubmit={() => {
                             form.handleSubmit(onSubmit)
-                        }} onReset={onReset} id="clientForm">
+                        }} onReset={onReset} id="clientEditForm">
                             <div className="grid grid-cols-2 items-center gap-4">
                                 <FormField
                                     control={form.control}
                                     name="firstName"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>{t("FirstName")}</FormLabel>
+                                            <FormLabel>Vorname</FormLabel>
                                             <FormControl>
-                                                <Input placeholder={t('PlaceholderFirstName')} {...field} />
+                                                <Input placeholder="Max" {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -81,9 +92,9 @@ export default function ClientForm() {
                                     name="lastName"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>{t('LastName')}</FormLabel>
+                                            <FormLabel>Nachname</FormLabel>
                                             <FormControl>
-                                                <Input placeholder={t('PlaceholderLastName')} {...field} />
+                                                <Input placeholder="Mustermann" {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -95,36 +106,35 @@ export default function ClientForm() {
                                         name="email"
                                         render={({field}) => (
                                             <FormItem>
-                                                <FormLabel>{t('Email')}</FormLabel>
+                                                <FormLabel>Email</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder={t('PlaceholderEmail')} {...field} />
+                                                    <Input placeholder="max@mustermann.de" {...field} />
                                                 </FormControl>
                                                 <FormMessage/>
                                             </FormItem>
                                         )}
                                     />
                                 </div>
-                                <div className="flex flex-col">
+                                <div className="mt-4 flex flex-col space-y-1.5">
                                     <FormField
                                         control={form.control}
                                         name="lastReminder"
                                         render={({field}) => (
                                             <FormItem>
-                                                <FormLabel>{t('LastReminder')}</FormLabel>
+                                                <FormLabel>Letzte Erinnerung</FormLabel>
                                                 <FormControl>
-                                                    <div className="relative flex max-w-2xl items-center ">
+                                                    <div className="relative flex max-w-2xl items-center">
                                                         <Input
-                                                            placeholder={yearMonthStringFromDate(new Date())}
-                                                            {...field} value={yearMonthStringFromDate(lastReminder)}/>
+                                                            placeholder={yearMonthStringFromDate(new Date())} {...field}
+                                                            value={yearMonthStringFromDate(lastReminder)}/>
                                                         <div className="absolute right-2 top-1.5">
                                                             <Popover>
                                                                 <PopoverTrigger>
                                                                     <Calendar/>
                                                                 </PopoverTrigger>
                                                                 <PopoverContent>
-                                                                    <MonthPicker
-                                                                        currentMonth={lastReminder}
-                                                                        onMonthChange={onMonthChange}/>
+                                                                    <MonthPicker currentMonth={lastReminder}
+                                                                                 onMonthChange={onMonthChange}/>
                                                                 </PopoverContent>
                                                             </Popover>
                                                         </div>
@@ -136,26 +146,29 @@ export default function ClientForm() {
                                     />
                                 </div>
                                 <div className="mt-4 flex flex-col space-y-1.5">
-                                    <Label htmlFor="frequency">{t('Frequency')}</Label>
-                                    <Select defaultValue="semiannual">
+                                    <FormLabel>Frequenz</FormLabel>
+                                    <Select defaultValue="halfyear">
                                         <SelectTrigger id="frequency" {...form.register("frequency")}>
                                             <SelectValue/>
                                         </SelectTrigger>
                                         <SelectContent position="popper">
-                                            <SelectItem value="semiannual">{t('Semiannual')}</SelectItem>
-                                            <SelectItem value="annual">{t('Annual')}</SelectItem>
+                                            <SelectItem value="halfyear">Halbjährlich</SelectItem>
+                                            <SelectItem value="year">Jährlich</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                             </div>
                         </form>
                     </Form>
-                </CardContent>
-                <CardFooter className="mt-2 grid w-full grid-cols-2 gap-4">
-                    <Button type="reset" form="clientForm" variant="outline">{t('Cancel')}</Button>
-                    <Button type="submit" form="clientForm">{t('Save')}</Button>
-                </CardFooter>
-            </Card>
-        </div>
-    );
+                    <DialogFooter>
+                        <Button type="reset" form="clientEditForm" variant="outline">Reset</Button>
+                        <Button type="submit" form="clientEditForm">Speichern</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <Button variant="ghost" className="size-8 p-0">
+                <Trash className="size-4"/>
+            </Button>
+        </>
+    )
 }
