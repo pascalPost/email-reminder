@@ -13,5 +13,5 @@ type ClientRequest struct {
 type Client struct {
 	*ClientRequest
 	Id               uint
-	RegistrationDate string `json:"registrationDate"`
+	RegistrationDate time.Time `json:"registrationDate"`
 }

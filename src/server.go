@@ -1,7 +1,7 @@
 package src
 
 import (
-	"changeme/src/routes"
+	"email-reminder/src/routes"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"log"

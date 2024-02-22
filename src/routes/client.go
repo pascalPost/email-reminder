@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"changeme/src/db"
-	"changeme/src/types"
+	"email-reminder/src/db"
+	"email-reminder/src/types"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"log"

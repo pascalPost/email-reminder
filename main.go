@@ -1,14 +1,14 @@
 package main
 
 import (
-	"changeme/src"
+	"email-reminder/src"
 	"embed"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
 
-//go:embed all:frontend/dist
+//go:embed all:frontend/out
 var assets embed.FS
 
 func main() {

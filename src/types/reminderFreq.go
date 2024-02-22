@@ -1,38 +1,21 @@
 package types
 
-import "fmt"
-
+//go:generate enumer -type=ReminderFrequency -json -transform=snake -output=reminderFreq_enumer.go
 type ReminderFrequency uint8
 
 const (
-	SEMIANNUAL ReminderFrequency = iota
-	ANNUAL
+	Semiannual ReminderFrequency = iota
+	Annual
 )
 
 func NewReminderFrequency(s string) (ReminderFrequency, error) {
-	if s == "SEMIANNUAL" {
-		return SEMIANNUAL, nil
-	} else if s == "ANNUAL" {
-		return ANNUAL, nil
-	}
-
-	return 0, fmt.Errorf("invalid reminder frequency: %s", s)
-}
-
-func (r ReminderFrequency) String() string {
-	if r == SEMIANNUAL {
-		return "SEMIANNUAL"
-	} else if r == ANNUAL {
-		return "ANNUAL"
-	}
-
-	return "invalid reminder frequency"
+	return ReminderFrequencyString(s)
 }
 
 func (r ReminderFrequency) StringGerman() string {
-	if r == SEMIANNUAL {
+	if r == Semiannual {
 		return "halbjährlich"
-	} else if r == ANNUAL {
+	} else if r == Annual {
 		return "jährlich"
 	}
 

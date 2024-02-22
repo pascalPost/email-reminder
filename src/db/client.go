@@ -1,8 +1,8 @@
 package db
 
 import (
-	"changeme/src/types"
 	"database/sql"
+	"email-reminder/src/types"
 	"errors"
 	"log"
 )
@@ -14,7 +14,7 @@ const createClientTable string = `
   firstname TEXT NOT NULL,
   lastname TEXT NOT NULL,
   email TEXT NOT NULL,
-  reminder_frequency TEXT CHECK( reminder_frequency IN ('ANNUAL','SEMIANNUAL') ) NOT NULL,
+  reminder_frequency TEXT CHECK( reminder_frequency IN ('Annual','Semiannual') ) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       );`
 

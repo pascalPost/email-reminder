@@ -1,6 +1,6 @@
 package src
 
-import "changeme/src/db"
+import "email-reminder/src/db"
 
 type State struct {
 	Db *db.DatabaseConnection
