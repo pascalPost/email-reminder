@@ -93,7 +93,7 @@ func (db *DatabaseConnection) GetClient(id uint) (*types.Client, error) {
 }
 
 // AddClient adds a new client to the database
-func (db *DatabaseConnection) AddClient(client types.Client) (uint, error) {
+func (db *DatabaseConnection) AddClient(client types.ClientRequest) (uint, error) {
 	res, err := db.handle.Exec("INSERT INTO client (firstname, lastname, email, reminder_frequency) VALUES (?, ?, ?, ?)", client.FirstName, client.LastName, client.Email, client.ReminderFrequency.String())
 	if err != nil {
 		return 0, err

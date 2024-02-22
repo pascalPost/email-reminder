@@ -1,0 +1,14 @@
+POST http://localhost:3000/client
+Content-Type: application/json
+
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "email": "john@doe.com",
+  "reminderFrequency": "annual",
+  "lastReminder": "2019-03"
+}
+
+###
+
+[Log] {firstName: "df", lastName: "dfs", email: "sdff@df.de", lastReminder: Wed Feb 01 2023 00:00:00 GMT+0100 (Central European Standard Time), frequency: "semiannual"} (_form.tsx, line 53)
