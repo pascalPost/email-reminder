@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"log"
+	"log/slog"
 	"net/http"
 )
 
@@ -70,7 +71,7 @@ func ClientPostHandler(db *db.DatabaseConnection) func(w http.ResponseWriter, r 
 			return
 		}
 
-		log.Printf("received data: %s\n", clientRequest)
+		slog.Debug("received data: %s\n", clientRequest)
 
 		// add client to database
 		clientId, err := db.AddClient(types.ClientRequest(clientRequest))

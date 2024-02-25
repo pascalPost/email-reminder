@@ -3,6 +3,9 @@ import {Routes} from '@generouted/react-router';
 import './globals.css';
 import React from 'react';
 import "./i18n.ts";
+import axios from "axios";
+
+axios.defaults.baseURL = 'http://localhost:3000';
 
 const root = document.getElementById('root');
 

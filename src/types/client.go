@@ -3,8 +3,8 @@ package types
 import "time"
 
 type ClientRequest struct {
-	FirstName         string            `json:"firstname"`
-	LastName          string            `json:"lastname"`
+	FirstName         string            `json:"firstName"`
+	LastName          string            `json:"lastName"`
 	Email             string            `json:"email"`
 	ReminderFrequency ReminderFrequency `json:"reminderFrequency"`
 	LastReminder      time.Time         `json:"lastReminder"`

@@ -68,8 +68,8 @@ func TestGetClient(t *testing.T) {
 
 func TestPostClient(t *testing.T) {
 	const clintJSON = `{
-			  "firstname": "John",
-			  "lastname": "Doe",
+			  "firstName": "John",
+			  "lastName": "Doe",
 			  "email": "john@doe.com",
 			  "reminderFrequency": "annual",
 			  "lastReminder": "2019-02-01T00:00:00.000Z"

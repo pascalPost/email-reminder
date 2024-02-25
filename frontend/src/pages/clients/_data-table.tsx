@@ -4,16 +4,18 @@ import {ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactT
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {useTranslation} from "react-i18next";
+import {Loading} from "@/components/loading.tsx";
 
-interface DataTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    loading?: boolean
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
-                                         }: DataTableProps<TData, TValue>) {
+                                         }: DataTableProps<TData, TValue>, loading = false) {
     const {t} = useTranslation();
 
     const table = useReactTable({
@@ -46,7 +48,7 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {table.getRowModel().rows.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
@@ -62,7 +64,11 @@ export function DataTable<TData, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    {loading ? (
+                                        <div className="flex items-center justify-center">
+                                            <Loading/>
+                                        </div>
+                                    ) : "No results."}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -73,7 +79,9 @@ export function DataTable<TData, TValue>({
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => table.previousPage()}
+                    onClick={() => {
+                        table.previousPage();
+                    }}
                     disabled={!table.getCanPreviousPage()}
                 >
                     Previous
@@ -81,7 +89,9 @@ export function DataTable<TData, TValue>({
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => table.nextPage()}
+                    onClick={() => {
+                        table.nextPage();
+                    }}
                     disabled={!table.getCanNextPage()}
                 >
                     Next
