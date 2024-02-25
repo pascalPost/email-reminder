@@ -17,20 +17,26 @@ type DatabaseConnection struct {
 
 // newDatabaseConnection creates a new database connection for the given file
 func newDatabaseConnection(file string) *DatabaseConnection {
-	db, err := sql.Open("sqlite3", file)
+	handle, err := sql.Open("sqlite3", file)
 	if err != nil {
 		panic(err)
 	}
-	if _, err := db.Exec(createClientTable); err != nil {
+
+	db := &DatabaseConnection{handle}
+
+	if err := db.CreateClientTable(); err != nil {
 		log.Fatalln(err)
 	}
+
+	if err := db.CreateEmailHistTable(); err != nil {
+		log.Fatalln(err)
+	}
+
 	//if err := CreateSettingsTable(db); err != nil {
 	//	panic(err)
 	//}
-	//if err := CreateEmailTable(db); err != nil {
-	//	panic(err)
-	//}
-	return &DatabaseConnection{db}
+
+	return db
 }
 
 // NewDatabaseConnection creates a new database connection

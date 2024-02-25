@@ -11,7 +11,7 @@ type ClientRequest struct {
 }
 
 type Client struct {
-	*ClientRequest
-	Id               uint
+	ClientRequest
+	Id               uint      `json:"id"`
 	RegistrationDate time.Time `json:"registrationDate"`
 }

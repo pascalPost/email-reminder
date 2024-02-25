@@ -5,18 +5,22 @@ import (
 	"email-reminder/src/types"
 	"errors"
 	"log"
+	"log/slog"
 )
 
-// createClientTable is the SQL statement to create the client table
-const createClientTable string = `
+// CreateClientTable creates the client table in the database
+func (db *DatabaseConnection) CreateClientTable() error {
+	_, err := db.handle.Exec(`
   CREATE TABLE IF NOT EXISTS client (
   id INTEGER NOT NULL PRIMARY KEY,
   firstname TEXT NOT NULL,
   lastname TEXT NOT NULL,
   email TEXT NOT NULL,
-  reminder_frequency TEXT CHECK( reminder_frequency IN ('Annual','Semiannual') ) NOT NULL,
+  reminder_frequency TEXT CHECK( reminder_frequency IN ('annual','semiannual') ) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );`
+      );`)
+	return err
+}
 
 // GetClients returns all clients in the database
 func (db *DatabaseConnection) GetClients() []types.Client {
@@ -48,12 +52,12 @@ func (db *DatabaseConnection) GetClients() []types.Client {
 			client.ReminderFrequency = reminderFrequency
 		}
 
-		//// get last email
-		//if lastEmail, err := db.GetLastEmail(client.Id); err == nil && lastEmail != nil {
-		//	client.LastEmail = lastEmail.Time
-		//} else {
-		//	log.Println(err)
-		//}
+		// get last email
+		if lastEmail, err := db.GetLastEmail(client.Id); err == nil && lastEmail != nil {
+			client.LastReminder = lastEmail.Time
+		} else {
+			log.Println(err)
+		}
 
 		clients = append(clients, client)
 	}
@@ -72,7 +76,8 @@ func (db *DatabaseConnection) GetClient(id uint) (*types.Client, error) {
 
 	var client types.Client
 	var reminderFrequencyStr string
-	if err := row.Scan(&client.Id, &client.FirstName, &client.LastName, &client.Email, &reminderFrequencyStr, &client.RegistrationDate); err != nil {
+	err := row.Scan(&client.Id, &client.FirstName, &client.LastName, &client.Email, &reminderFrequencyStr, &client.RegistrationDate)
+	if err != nil {
 		return nil, err
 	}
 
@@ -82,12 +87,13 @@ func (db *DatabaseConnection) GetClient(id uint) (*types.Client, error) {
 		client.ReminderFrequency = reminderFrequency
 	}
 
-	//// get last email
-	//if lastEmail, err := db.GetLastEmail(id); err != nil {
-	//	return &client, err
-	//} else if lastEmail != nil {
-	//	client.LastEmail = lastEmail.Time
-	//}
+	// get last email
+	if lastEmail, err := db.GetLastEmail(id); err != nil {
+		slog.Warn(err.Error())
+		return &client, err
+	} else if lastEmail != nil {
+		client.LastReminder = lastEmail.Time
+	}
 
 	return &client, nil
 }
@@ -108,6 +114,11 @@ func (db *DatabaseConnection) AddClient(client types.ClientRequest) (uint, error
 	}
 
 	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	err = db.AddEmailAtDate(uint(id), client.LastReminder)
 	if err != nil {
 		return 0, err
 	}

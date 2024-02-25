@@ -46,11 +46,20 @@ func (c *ClientRequest) Bind(r *http.Request) error {
 func ClientRoutes(db *db.DatabaseConnection) chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		render.JSON(w, r, db.GetClients())
-	})
+	r.Get("/", ClientGetHandler(db))
+	r.Post("/", ClientPostHandler(db))
 
-	r.Post("/", func(w http.ResponseWriter, r *http.Request) {
+	return r
+}
+
+func ClientGetHandler(db *db.DatabaseConnection) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		render.JSON(w, r, db.GetClients())
+	}
+}
+
+func ClientPostHandler(db *db.DatabaseConnection) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		var clientRequest ClientRequest
 		if err := render.Bind(r, &clientRequest); err != nil {
 			log.Println(err)
@@ -76,14 +85,12 @@ func ClientRoutes(db *db.DatabaseConnection) chi.Router {
 			return
 		}
 
-		//// add last email to database
-		//if err := db.AddEmailAtDate(clientId, lastReminder); err != nil {
-		//	log.Println(err)
-		//	return
-		//}
+		// add last email to database
+		if err := db.AddEmailAtDate(clientId, clientRequest.LastReminder); err != nil {
+			log.Println(err)
+			return
+		}
 
 		render.JSON(w, r, newClient)
-	})
-
-	return r
+	}
 }
