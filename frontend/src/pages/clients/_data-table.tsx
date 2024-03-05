@@ -12,10 +12,23 @@ type DataTableProps<TData, TValue> = {
     loading?: boolean
 }
 
+/// This function is used to display a loading spinner when the data is being fetched or a message when there is no data.
+function noData(loading: boolean) {
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center">
+                <Loading/>
+            </div>
+        )
+    }
+    return "No results."
+}
+
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
-                                         }: DataTableProps<TData, TValue>, loading = false) {
+                                             loading = false
+                                         }: DataTableProps<TData, TValue>) {
     const {t} = useTranslation();
 
     const table = useReactTable({
@@ -64,11 +77,7 @@ export function DataTable<TData, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    {loading ? (
-                                        <div className="flex items-center justify-center">
-                                            <Loading/>
-                                        </div>
-                                    ) : "No results."}
+                                    {noData(loading)}
                                 </TableCell>
                             </TableRow>
                         )}
