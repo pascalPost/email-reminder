@@ -6,6 +6,10 @@ import axios from "axios";
 
 async function fetchClients(): Promise<Client[]> {
     return axios.get('/client').then(response => {
+        if (response.status == 200 && response.data == null) {
+            // success response with empty data
+            return [];
+        }
         return response.data as Client[];
     });
 }
