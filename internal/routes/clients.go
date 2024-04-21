@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	"github.com/pascalPost/email-reminder/internal/db"
+	"github.com/pascalPost/email-reminder/internal/dataBase"
 	"github.com/pascalPost/email-reminder/internal/types"
 	"github.com/swaggest/openapi-go/openapi3"
 	"log"
@@ -45,7 +45,7 @@ func (c *ClientRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func ClientRoutes(db *db.DatabaseConnection, reflector *openapi3.Reflector) chi.Router {
+func ClientRoutes(db *dataBase.DatabaseConnection, reflector *openapi3.Reflector) chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", getClientsHandler(db, reflector))
@@ -54,13 +54,15 @@ func ClientRoutes(db *db.DatabaseConnection, reflector *openapi3.Reflector) chi.
 	return r
 }
 
-func getClientsHandler(db *db.DatabaseConnection, reflector *openapi3.Reflector) func(w http.ResponseWriter, r *http.Request) {
-	op, _ := reflector.NewOperationContext(http.MethodGet, "/clients")
-	op.SetSummary("Returns all clients")
-	op.AddRespStructure([]types.Client{})
-	err := reflector.AddOperation(op)
-	if err != nil {
-		slog.Error("Error adding get '/clients' to oapi", "error", err)
+func getClientsHandler(db *dataBase.DatabaseConnection, reflector *openapi3.Reflector) func(w http.ResponseWriter, r *http.Request) {
+	if reflector != nil {
+		op, _ := reflector.NewOperationContext(http.MethodGet, "/clients")
+		op.SetSummary("Returns all clients")
+		op.AddRespStructure([]types.Client{})
+		err := reflector.AddOperation(op)
+		if err != nil {
+			slog.Error("Error adding get '/clients' to oapi", "error", err)
+		}
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -69,14 +71,16 @@ func getClientsHandler(db *db.DatabaseConnection, reflector *openapi3.Reflector)
 	}
 }
 
-func postClientHandler(db *db.DatabaseConnection, reflector *openapi3.Reflector) func(w http.ResponseWriter, r *http.Request) {
-	op, _ := reflector.NewOperationContext(http.MethodPost, "/clients")
-	op.SetSummary("Add a new client")
-	op.AddReqStructure(types.ClientRequest{})
-	op.AddRespStructure(types.Client{})
-	err := reflector.AddOperation(op)
-	if err != nil {
-		slog.Error("Error adding post '/clients' to oapi", "error", err)
+func postClientHandler(db *dataBase.DatabaseConnection, reflector *openapi3.Reflector) func(w http.ResponseWriter, r *http.Request) {
+	if reflector != nil {
+		op, _ := reflector.NewOperationContext(http.MethodPost, "/clients")
+		op.SetSummary("Add a new client")
+		op.AddReqStructure(types.ClientRequest{})
+		op.AddRespStructure(types.Client{})
+		err := reflector.AddOperation(op)
+		if err != nil {
+			slog.Error("Error adding post '/clients' to oapi", "error", err)
+		}
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +94,7 @@ func postClientHandler(db *db.DatabaseConnection, reflector *openapi3.Reflector)
 			return
 		}
 
-		slog.Debug("received data: %s\n", clientRequest)
+		slog.Debug("received data: %s\n", "req", clientRequest)
 
 		// add client to database
 		clientId, err := db.AddClient(types.ClientRequest(clientRequest))

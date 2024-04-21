@@ -1,11 +1,10 @@
-package test
+package routes
 
 import (
 	"bytes"
-	. "email-reminder/src/db"
-	"email-reminder/src/routes"
-	"email-reminder/src/types"
 	"encoding/json"
+	"github.com/pascalPost/email-reminder/internal/dataBase"
+	"github.com/pascalPost/email-reminder/internal/types"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -14,17 +13,17 @@ import (
 	"time"
 )
 
-var db *DatabaseConnection
+var db *dataBase.DatabaseConnection
 
 // TestMain sets up the in mem db and runs the tests
 func TestMain(m *testing.M) {
-	db = NewTestDatabaseConnection()
+	db = dataBase.NewTestDatabaseConnection()
 	defer db.Close()
 
 	os.Exit(m.Run())
 }
 
-func TestGetClient(t *testing.T) {
+func TestGetClients(t *testing.T) {
 	lastReminder := time.Date(2019, 2, 1, 0, 0, 0, 0, time.UTC)
 	newClient := types.ClientRequest{
 		FirstName:         "Max",
@@ -55,7 +54,7 @@ func TestGetClient(t *testing.T) {
 	assert.NoError(t, err)
 
 	w := httptest.NewRecorder()
-	routes.ClientGetHandler(db)(w, req)
+	getClientsHandler(db, nil)(w, req)
 	res := w.Result()
 	assert.Equal(t, 200, w.Result().StatusCode)
 
@@ -85,7 +84,7 @@ func TestPostClient(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	w := httptest.NewRecorder()
-	routes.ClientPostHandler(db)(w, req)
+	postClientHandler(db, nil)(w, req)
 	res := w.Result()
 	assert.Equal(t, 200, w.Result().StatusCode)
 

@@ -1,5 +1,8 @@
 # email-reminder
 
+// TODO add test icon
+// TODO add github actions
+
 This is an email reminder application written in Go (backend) and React (frontend).
 Wails is used to bundle it as a desktop application.
 

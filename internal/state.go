@@ -1,14 +1,12 @@
 package internal
 
-import "github.com/pascalPost/email-reminder/internal/db"
-
 type State struct {
-	Db *db.DatabaseConnection
+	Db *dataBase.DatabaseConnection
 	//settings *Settings
 }
 
 func NewState() *State {
-	db := db.NewDatabaseConnection()
+	db := dataBase.NewDatabaseConnection()
 	//settings := NewSettings(Db)
 
 	return &State{
