@@ -1,9 +1,9 @@
 package main
 
 import (
-	"email-reminder/internal"
 	"embed"
 	"flag"
+	"github.com/pascalPost/email-reminder/internal"
 )
 
 //go:embed all:frontend/out

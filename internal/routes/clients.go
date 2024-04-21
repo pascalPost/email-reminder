@@ -1,10 +1,11 @@
 package routes
 
 import (
-	"email-reminder/internal/db"
-	"email-reminder/internal/types"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"github.com/pascalPost/email-reminder/internal/db"
+	"github.com/pascalPost/email-reminder/internal/types"
+	"github.com/swaggest/openapi-go/openapi3"
 	"log"
 	"log/slog"
 	"net/http"
@@ -44,22 +45,40 @@ func (c *ClientRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func ClientRoutes(db *db.DatabaseConnection) chi.Router {
+func ClientRoutes(db *db.DatabaseConnection, reflector *openapi3.Reflector) chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", ClientGetHandler(db))
-	r.Post("/", ClientPostHandler(db))
+	r.Get("/", getClientsHandler(db, reflector))
+	r.Post("/", postClientHandler(db, reflector))
 
 	return r
 }
 
-func ClientGetHandler(db *db.DatabaseConnection) func(w http.ResponseWriter, r *http.Request) {
+func getClientsHandler(db *db.DatabaseConnection, reflector *openapi3.Reflector) func(w http.ResponseWriter, r *http.Request) {
+	op, _ := reflector.NewOperationContext(http.MethodGet, "/clients")
+	op.SetSummary("Returns all clients")
+	op.AddRespStructure([]types.Client{})
+	err := reflector.AddOperation(op)
+	if err != nil {
+		slog.Error("Error adding get '/clients' to oapi", "error", err)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
+		// TODO add pagination
 		render.JSON(w, r, db.GetClients())
 	}
 }
 
-func ClientPostHandler(db *db.DatabaseConnection) func(w http.ResponseWriter, r *http.Request) {
+func postClientHandler(db *db.DatabaseConnection, reflector *openapi3.Reflector) func(w http.ResponseWriter, r *http.Request) {
+	op, _ := reflector.NewOperationContext(http.MethodPost, "/clients")
+	op.SetSummary("Add a new client")
+	op.AddReqStructure(types.ClientRequest{})
+	op.AddRespStructure(types.Client{})
+	err := reflector.AddOperation(op)
+	if err != nil {
+		slog.Error("Error adding post '/clients' to oapi", "error", err)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		var clientRequest ClientRequest
 		if err := render.Bind(r, &clientRequest); err != nil {

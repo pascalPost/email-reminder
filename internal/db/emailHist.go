@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"email-reminder/src/types"
+	"github.com/pascalPost/email-reminder/internal/types"
 	"time"
 )
 

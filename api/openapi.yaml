@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  description: email-reminder backend allows to add new clients, set reminder dates
+    and allows to send reminder emails to clients if they are due.
+  title: email-reminder API
+  version: 0.1.0
+paths:
+  /clients:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TypesClient'
+                type: array
+          description: OK
+      summary: Returns all clients
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TypesClientRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesClient'
+          description: OK
+      summary: Add a new client
+  /ping:
+    get:
+      description: The ping endpoint can be used to test the connection to the server.
+      responses:
+        "200":
+          description: OK
+      summary: Ping to test connection
+components:
+  schemas:
+    TypesClient:
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        id:
+          minimum: 0
+          type: integer
+        lastName:
+          type: string
+        lastReminder:
+          format: date-time
+          type: string
+        registrationDate:
+          format: date-time
+          type: string
+        reminderFrequency:
+          minimum: 0
+          type: integer
+      type: object
+    TypesClientRequest:
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        lastReminder:
+          format: date-time
+          type: string
+        reminderFrequency:
+          minimum: 0
+          type: integer
+      type: object

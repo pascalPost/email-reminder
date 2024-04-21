@@ -1,6 +1,6 @@
 package internal
 
-import "email-reminder/internal/db"
+import "github.com/pascalPost/email-reminder/internal/db"
 
 type State struct {
 	Db *db.DatabaseConnection

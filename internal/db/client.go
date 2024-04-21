@@ -2,8 +2,8 @@ package db
 
 import (
 	"database/sql"
-	"email-reminder/src/types"
 	"errors"
+	"github.com/pascalPost/email-reminder/internal/types"
 	"log"
 	"log/slog"
 )
