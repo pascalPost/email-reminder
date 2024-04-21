@@ -1,7 +1,7 @@
 package main
 
 import (
-	"email-reminder/src"
+	"email-reminder/internal"
 	"embed"
 	"flag"
 )
@@ -12,7 +12,7 @@ var assets embed.FS
 func main() {
 	s := flag.Bool("server", true, "Run the server")
 	if *s {
-		go src.Server()
+		go internal.Server()
 	}
-	src.RunApp(assets)
+	internal.RunApp(assets)
 }

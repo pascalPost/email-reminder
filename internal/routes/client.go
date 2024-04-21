@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"email-reminder/src/db"
-	"email-reminder/src/types"
+	"email-reminder/internal/db"
+	"email-reminder/internal/types"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"log"

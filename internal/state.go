@@ -1,6 +1,6 @@
-package src
+package internal
 
-import "email-reminder/src/db"
+import "email-reminder/internal/db"
 
 type State struct {
 	Db *db.DatabaseConnection
